@@ -59,10 +59,28 @@ Increasing number of services in my microservice:
      kubectl get hpa  
        ###creating configmaps ###
      kubectl create configmap hello-world-app --from-literal=RDS_DB_NAME=hello-world
+     kubectl get configmap
      kubectl describe configmap hello-world  
-     
+
 
 15. Adding configs for microservices, lets say database:
+    config map - 
+         kubectl create configmap hello-world-app --from-literal=RDS_DB_NAME=hello-world
+         kubectl describe configmap hello-world
+
+16. Add secrets to microservices:
+      ### ads passwords and usercredentials to microservice#
+      kubectl create secret generic hello-world-app-secrets --from-literal=RDS_PASSWORD=dummyhelloworld
+      ###get secrets###
+      kubectl get secrets
+      ###get infor about the secrets ###
+      kubectl describe secret hello-world-app-secrets 
      
+### If you want to store databases use configmaps###
+### if you want to store passwords use secrets###
+
+### There are two ways to deploy things to kubernetes ###
+                1. commands (imaprative style)
+                2. yaml (Declarative style)
      
     
