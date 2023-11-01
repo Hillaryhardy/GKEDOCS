@@ -51,5 +51,18 @@ Increasing number of services in my microservice:
 13. Increase number of nodes in cluster/Cluster resize:
       ### If you want to run 100 or 1000 instances your microservices ###
      gcloud container clusters resize duplicate-cluster --node-pool default-pool --num-nodes=2 --zone=europe-west3-c
+        ###this is increasing the number of nodes manually, which is not handy###
 
+14. Auto scaling for microservice:
+     kubectl autoscale deployment hello-world-rest-api --max=4 --cpu-percent=70
+       ### internally after this command is entered a HPA(Horizontal pod autoscale) is created
+     kubectl get hpa  
+       ###creating configmaps ###
+     kubectl create configmap hello-world-app --from-literal=RDS_DB_NAME=hello-world
+     kubectl describe configmap hello-world  
+     
+
+15. Adding configs for microservices, lets say database:
+     
+     
     
