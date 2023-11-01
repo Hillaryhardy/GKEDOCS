@@ -1,0 +1,36 @@
+1. Connecting to created Cluster:
+    gcloud container clusters get-credentials duplicate-cluster --zone europe-west3-c --project able-reef-372206
+
+2. Creating a deployment with image:
+    kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+    
+3. Get deployments in the given cluster:
+    kubectl get deployment
+    
+4. Exposing the deployment to the outside world:
+    kubectl expose deployment hello-world-rest-api --type=loadbalancer --port=8080
+    
+5. Get all services in the given cluster 
+    kubectl get services
+    
+6. Watch progress of LoadBalancer external IP to be provided:
+    kubectl get services --watch
+    
+7. Curl to see if external IP is working
+    curl 34.159.69.247:8080
+    curl 34.159.69.247:8080/hello-world
+    
+8. To get a list of events happening in the cluster
+    kubectl get events
+    
+
+
+######
+You create a deployment to deploy a micro service:
+You create a service to expose the deployment to the outside world.
+######
+
+#####
+Increasing number of services in my microservice
+#####
+
