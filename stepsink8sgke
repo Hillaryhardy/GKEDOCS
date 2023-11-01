@@ -17,4 +17,10 @@ Create a cluster, deploy a microservice and play around GKE.
 
     ## k8sgke has indepth on the above ##
 
+5. Increase number of instaces of your microservices 
+    * kubectl scale deployment nameofdeployment --replicas=3
+
+6. Increase number of nodes in your kubernetes cluster/Cluster resize:
+    * gcloud container clusters resize duplicate-cluster --node-pool default-pool --num-nodes=2 --zone=europe-west3-c
+
 

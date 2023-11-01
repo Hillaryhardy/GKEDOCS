@@ -9,18 +9,18 @@
     
 4. Exposing the deployment to the outside world:
     kubectl expose deployment hello-world-rest-api --type=loadbalancer --port=8080
-    
-5. Get all services in the given cluster 
+        
+5. Get all services in the given cluster:
     kubectl get services
     
 6. Watch progress of LoadBalancer external IP to be provided:
     kubectl get services --watch
     
-7. Curl to see if external IP is working
+7. Curl to see if external IP is working:
     curl 34.159.69.247:8080
     curl 34.159.69.247:8080/hello-world
     
-8. To get a list of events happening in the cluster
+8. To get a list of events happening in the cluster:
     kubectl get events
     
 
@@ -31,6 +31,25 @@ You create a service to expose the deployment to the outside world.
 ######
 
 #####
-Increasing number of services in my microservice
+Increasing number of services in my microservice:
 #####
 
+9. Scale your  deployment:
+    kubectl scale deployment hello-world-rest-api --replicas=3
+    
+10. View deployments after scale:
+     kubectl get deployment
+
+11. Watch if deployment scale is working:
+     watch curl http://34.159.69.247:8080/hello-world
+        ### if correctly done youll notice three different sources: the are called pods.###
+        ### Load is now distributed among the pods###      
+
+12. Get pods: 
+     kubectl get pods
+     
+13. Increase number of nodes in cluster/Cluster resize:
+      ### If you want to run 100 or 1000 instances your microservices ###
+     gcloud container clusters resize duplicate-cluster --node-pool default-pool --num-nodes=2 --zone=europe-west3-c
+
+    
