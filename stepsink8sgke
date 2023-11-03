@@ -37,7 +37,7 @@ Create a cluster, deploy a microservice and play around GKE.
 10.  Adding secrets in your microservice:
        Kubernetes secrets
        * kubectl create secret generic hello-world-app-secrets --from-literal=RDS_PASSWORD=dummyhelloworld
-
+ 
        #### If you want to store databases use configmaps###
        ### if you want to store passwords use secrets###
 
