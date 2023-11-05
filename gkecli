@@ -1,0 +1,27 @@
+Create GKE Cluster using cli
+
+# this assumes tCLUSTER-NAMEhat youve already Have an CGP account and are using the standard mode Cluster 
+
+1. Open your terminal, this varies depending on the OS you are using.
+2. Type the following into your terminal: "gcloud container clusters create [utu-trust-api-cluster]"
+   This creates a cluster by the name "utu-trust-api-cluster"
+
+3. Cluster Authentication.
+   One must get authentication credentials to be able to connect to the cluster.
+   Type the following commands to authenticate:
+      "gcloud container clusters get-credentials [utu-trust-api-cluster]"
+
+4. Connect to GKE cluster
+   on your console, navigate to the "kubernetes" engine under "compute", click on "clusters".
+   then click on the "Connect"
+   Click on "Run in cloud shell" then continue.
+
+5. Type the following commands into the CLI
+        "gcloud container clusters get-credentials utu-trust-api-cluster --zone europe-west3"
+
+6. Verify if connection is successful by typing the following into the CLI
+         "kubectl get nodes"
+
+8.
+
+
