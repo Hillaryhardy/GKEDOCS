@@ -1,0 +1,19 @@
+Create GKE Cluster Console
+
+# this assumes that youve already Have an CGP account and are using the standard mode Cluster 
+
+1. First Log in to the Google Cloud Console using (console.cloud.google.com).
+2. Select a new project, create a new project if non exists.
+3. Using the navigation menu on the Cloud console, navigate to "compute" then click on "kubernetes Engine"
+4. Click "create cluster" to start cluster creation
+5. Under cluster mode select "Standard"
+6. Select "Zonal" under the Location "Section"
+7. Select the desired zone you want your cluster to be at, and name of the cluster.
+     
+    # Name: utu-trust-api-cluster 
+    # Location Type: Zonal
+    # Zone: europe-west3-c (you can select the default location also i.e., us-central1-c)
+
+8. Next. select default-pool under NODE POOLS. Depending on what you need you'll use the best option for your need.
+9. Assuming you picked "Default pool", specify the number of nodes, leave the rest as default.
+10. Configure other setting, machine type and desired kubernetes version. 
