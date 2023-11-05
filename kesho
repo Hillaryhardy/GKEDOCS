@@ -17,3 +17,5 @@ Create GKE Cluster Console
 8. Next. select default-pool under NODE POOLS. Depending on what you need you'll use the best option for your need.
 9. Assuming you picked "Default pool", specify the number of nodes, leave the rest as default.
 10. Configure other setting, machine type and desired kubernetes version. 
+11. Next step will be configuring node configuration, security option and networking options.
+12. Click "Create" for cluster to be created, This might take some time.
