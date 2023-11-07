@@ -7,6 +7,7 @@
 3. Get deployments in the given cluster:
     kubectl get deployment
     
+    
 4. Exposing the deployment to the outside world:
     kubectl expose deployment hello-world-rest-api --type=loadbalancer --port=8080
         
