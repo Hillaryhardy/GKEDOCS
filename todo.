@@ -1,0 +1,4 @@
+Some fundamental tools are Git, CI/CD
+Container orchestration (Kubernetes)
+Configuration management (Ansible, Terraform)
+Observability tools (Prometheus, Grafana, Jaeger)
