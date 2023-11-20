@@ -1,0 +1,91 @@
+Google Cloud Load Balancing Cheat Sheet
+
+    Google Cloud Load Balancing allows you to put your resources behind a single IP address.
+
+Features
+
+    Can be set to be available externally or internally with your Virtual Private Network (VPC).
+    HTTP(S) load balancing can balance HTTP and HTTPS traffic across multiple backend instances, across multiple regions. 
+    Enable Cloud CDN for HTTP(S) load balancing to optimize application delivery for your users with a single checkbox.
+    You can define the autoscaling policy and the autoscaler performs automatic scaling based on the measured load. No pre-warming required — go from zero to full throttle in seconds.
+    Manage SSL certificates and decryption.
+
+Types of Google Cloud Load Balancers
+
+    External Load Balancer
+        External HTTP(s)
+            Supports HTTP/HTTP(s) traffic
+            Distributes traffic for the following backend types:
+                Instance groups
+                Zonal network endpoint groups (NEGs)
+                Serverless NEGs: One or more App Engine, Cloud Run, or Cloud Functions services
+                Internet NEGs, for endpoints that are outside of Google Cloud (also known as custom origins)
+                Buckets in Cloud Storage
+            Scope is global
+            Destination ports
+                HTTP on 80 or 8080
+                HTTPS on 443
+            On each backend service, you can optionally enable Cloud CDN and Google Cloud Armor.
+        External Network TCP/UDP
+            A network load balancer that distributes TCP or UDP traffic among virtual machines in the same region.
+            Regional in scope
+            Can receive traffic from:
+                Any client on the Internet
+                Google Cloud VMs with external IP
+                Google Cloud VMs that have Internet access through Cloud NAT or instance-based NAT
+            Network load balancers are not proxies.
+                Load-balanced packets are received by backend VMs with their source IP unchanged.
+                Load-balanced connections are terminated by the backend VMs.
+                Responses from the backend VMs go directly to the clients, not back through the load balancer. The industry term for this is direct server return.
+        SSL Proxy Load Balancer
+            Supports TCP with SSL offload traffic.
+            It is intended for non-HTTP(S) traffic.
+            Scope is global.
+            By using SSL Proxy Load Balancing, SSL connections are terminated at the load balancing layer, and then proxied to the closest available backend.
+            Destination ports
+                5, 43, 110, 143, 195, 443, 465, 587, 700, 993, 995, 1883, 3389, 5222, 5432, 5671, 5672, 5900, 5901, 6379, 8085, 8099, 9092, 9200, and 9300
+        TCP Proxy
+            Traffic coming over a TCP connection is terminated at the load balancing layer, and then proxied to the closest available backend.
+            Destination Ports
+                25, 43, 110, 143, 195, 443, 465, 587, 700, 993, 995, 1883, 3389, 5222, 5432, 5671, 5672, 5900, 5901, 6379, 8085, 8099, 9092, 9200, and 9300.
+            Can be configured as a global service where you can deploy your backends in multiple regions and it automatically directs traffic to the region closest to the user.
+    Internal Load Balancer
+        Internal HTTP(s) 
+            A proxy-based, regional Layer 7 load balancer that enables you to run and scale your services behind an internal IP address.
+            Supports HTTP/HTTP(s) traffic.
+            Distributes traffic to backends hosted on Google Compute Engine (GCE) and Google Kubernetes Engine (GKE).
+            Scope is regional.
+            Load Balancer destination ports
+                HTTP on 80 or 8080
+                HTTPS on 443
+        Internal TCP or UDP
+            A regional load balancer that allows you to run and scale your services behind an internal load balancing IP address that is accessible only to your internal virtual machine instances.
+            Distributes traffic among virtual machine instances in the same region in a Virtual Private cloud network by using an internal IP address.
+            Does not support:
+                Backend virtual machines in multiple regions
+                Balancing traffic that originates from the Internet
+
+Tutorials dojo strip
+Validate Your Knowledge
+Question 1
+
+You deploy a web application running on a Cloud Engine instance in the asia-northeast1-a zone. You want to eliminate the risk of possible downtime due to the failure of a single Compute Engine zone while minimizing costs.
+
+What should you do?
+
+    Deploy another instance in asia-northeast1-bBalance the load in asia-northeast1-a, and asia-northeast1-b using an Internal Load Balancer (ILB).
+    Deploy multiple instances on asia-northeast1-a, asia-northeast1-b, and asia-northeast1-cBalance the load across all zones using an Internal Load Balancer (ILB).
+    Create an instance template and deploy a managed instance group in a single zone. Configure a health check to monitor the instances.
+    Create a snapshot schedule for your instance. Set up a Cloud Monitoring Alert to monitor the instance. Restore the instance using the snapshot when the instance goes down.
+
+Show me the answer!
+Question 2
+
+Your team maintains an application that receives SSL/TLS-encrypted traffic on port 443. Your customers from various parts of the globe report latency issues when accessing your application. 
+
+What should you do?
+
+    Use an External HTTP(S) Load Balancer in front of your application.
+    Use an SSL Proxy Load Balancer in front of your application.
+    Use a TCP Proxy in front of your application.
+    Use an Internal HTTP(S) Load Balancer in front of your application.
