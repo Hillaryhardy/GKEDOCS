@@ -1,0 +1,11 @@
+[
+    {
+      "origin": ["*"],
+      "method": ["*"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    }
+]
+
+
+gcloud storage buckets describe gs://utu-app-stage --format="default(cors_config)"
