@@ -8,4 +8,4 @@
 ]
 
 
-gcloud storage buckets describe gs://utu-app-stage --format="default(cors_config)"
+

@@ -1,0 +1,266 @@
+**Create and Set your GCP project**
+
+To create a Cloud project, use the gcloud projects create`command:
+
+```
+gcloud projects create PROJECT_ID
+```
+
+After creating your cloud project, set the project
+
+```
+     gcloud config set project able-reef-372206
+
+```
+
+Replace `able-reef-372206` with your ID
+
+**Cluster setup (GCP only)**
+
+**Creating a GKE Cluster using the CLI**
+
+1. **Open a terminal window**
+Launch a terminal window on your local machine.
+2. **Authenticate to GCP**
+Run the following command to authenticate to your GCP account:
+
+```
+gcloud auth login
+```
+
+This will open a window in your browser that will prompt you authenticate your GCP credentials.
+
+To set or change to a project run:
+
+```bash
+gcloud config set project PROJECT_ID
+```
+
+If you don't have a project , you can create one using the following command:
+
+```bash
+gcloud projects create PROJECT_ID
+```
+
+1. **Creating a cluster**
+Use the following command to create the cluster:
+
+```
+gcloud container clusters create utu-trust-api-cluster-docs --num-nodes=3 --zone=europe-west3-c
+```
+
+Replace `[utu-trust-api-cluster-docs]` with the desired name for your cluster.
+
+At any time, you can list all supported cluster and node versions using this command:
+
+```
+gcloud container get-server-config --zone=europe-west3-c
+```
+
+To increase the size of a cluster's node pools, run the `[gcloud container clusters resize](https://cloud.google.com/sdk/gcloud/reference/container/clusters/resize)` command:
+
+```
+gcloud container clusters resize CLUSTER_NAME --node-pool POOL_NAME \
+    --num-nodes NUM_NODES
+```
+
+Replace the following:
+
+- `CLUSTER_NAME`: the name of the cluster to resize.
+- `POOL_NAME`: the name of the node pool to resize.
+- `NUM_NODES`: the number of nodes in the pool in a
+zonal cluster. If you use multi-zonal or regional clusters,
+`NUM_NODES` is the number of nodes for each zone the
+node pools is in.
+
+Repeat this command for each node pool. If your cluster has only one node
+pool, omit the `--node-pool` flag.
+
+1. **Create Service account = IAM policy**
+
+The following command shows the syntax for creating a Service Account:
+
+```
+# create service account in project
+gcloud iam service-accounts create SA_NAME
+
+# OR
+gcloud iam service-accounts create SA_NAME \
+    --description="DESCRIPTION" \
+    --display-name="DISPLAY_NAME"
+```
+
+Replace the following:
+
+- `SA_NAME`: the name of the service account.
+- `DESCRIPTION`: an optional description of the service account
+- `DISPLAY_NAME`: a service account name to display in the Google Cloud console
+
+To get a full list of all services created:
+
+```bash
+gcloud iam service-accounts list
+```
+
+Use the following command for policy binding
+
+```bash
+gcloud projects add-iam-policy-binding {PROJECT_ID} --member
+```
+
+Assign roles to the Service account using the commands 
+
+```bash
+gcloud projects add-iam-policy-binding {PROJECT_ID} --member="serviceAccount:$FULL_SA_ID" --role="roles/owner"
+```
+
+Download the service account key:
+
+```bash
+gcloud iam service-accounts keys create cred.json --iam-account=$FULL_SA_ID
+```
+
+Associate a ROLE:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS='path/to/cred.json'
+```
+
+Enable container APIs
+
+```bash
+gcloud services enable container.googleapis.com
+```
+
+Enable cloud resource manager 
+
+```bash
+gcloud services enable cloudresourcemanager.googleapis.com
+```
+
+ 
+
+**From GCP Console**
+
+1. Create a service account with GCP console
+2. Download the json key file
+3. Create a role and assign proper required permissions to the role.
+4. gcloud config set account [gcli@someproject.iam.gserviceaccount.com](mailto:gcli@someproject.iam.gserviceaccount.com)
+5. gcloud auth activate-service-account — key-file=gcli.json — project=someprojectname
+
+### Common operations
+
+**Listing resources**
+
+# listing namespaces
+
+```bash
+kubectl get namespaces
+```
+
+# listing pods
+
+```bash
+kubectl -n $NAMESPACE get pods
+```
+
+# listing services
+
+```bash
+kubectl -n $NAMESPACE get services
+```
+
+# listing ingresses
+
+```bash
+kubectl get ingress -A
+```
+
+# listing configurations
+
+```bash
+kubectl -n $NAMESPACE get configmap
+```
+
+# listing secrets
+
+```bash
+kubectl -n $NAMESPACE get secrets
+```
+
+**In place edits**
+
+Most of the resources in a k8s cluster are editable in place using the command
+
+```bash
+kubectl -n $NAMESPACE edit $RESOURCE $RESOURCE_NAME
+```
+
+# example
+
+```bash
+kubectl -n utu-trust-api edit deployment trust-api-core
+```
+
+**Deployments lifecycle**
+
+Deploy or update a resource from the descriptor:
+
+```bash
+kubectl -n $NAMESPACE apply -f $RESOURCE_YAML
+```
+
+Restart a running pod (eg. to reload configurations)
+
+```bash
+kubectl -n $NAMESPACE delete pod $POD_NAME
+```
+
+*💡 deleting a pod will make k8s respawn a new one, according
+to the replica configuration defined in the pod's deployment (default 1).
+For other resources (configmaps, secrets, ingress, ...) will actually delete the resource from the cluster*
+
+Stop a pod: stopping a pod means to change the deployment descriptor and to
+say to keep 0 replicas alive.
+
+```bash
+kubectl -n $NAMESPACE scale deployment $DEPLOYMENT_NAME --replicas 0
+```
+
+> 💡 the scale command is also used to run multiple instances of the same deployment
+> 
+
+Delete a pod
+
+```bash
+kubectl -n $NAMESPACE delete deployment $DEPLOYMENT_NAME
+```
+
+Run a specific docker image version
+
+Rollback the latest deploy
+
+```bash
+kubectl -n $NAMESPACE rollout undo deployment/$DEPLOYMENT_NAME
+```
+
+**Cleanup stale pods**
+
+This command is to be used when there are pods in state `evicted`, meaning that
+they have been moved by k8s because they exceeded the resource limits:
+
+```bash
+kubectl -n $NAMESPACE get pods --field-selector 'status.phase!=Running' -o json | kubectl delete -f -
+```
+
+### Makefile for deployments
+
+Most of the projects ([example](https://bitbucket.org/utu-technologies/utu-trust-api-user/src/master/Makefile)) do come with a `Makefile` that provides the following commands:
+
+1. `make build` - builds the project locally
+2. `make docker-build` - builds the docker image
+3. `make docker-push [DOCKER_TAG=latest]` - publish the project docker image to the configured docker registry, using the commit as version unless the `DOCKER_TAG` option is provided
+4. `make k8s-deploy` - use the command `set image` to run the build image
+5. `make k8s-rollback` - rollbacks the latest deploy
+
+the commands from 1 to 3 can be used both in a local environment or taken as example for CI/CD configuration while the command 4 is better used in a CI/CD or production environment and the 5 as emergency command.
